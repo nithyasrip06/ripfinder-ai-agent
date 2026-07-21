@@ -23,46 +23,49 @@ There are two entry points:
 
 ## Architecture
 
-1. **`agent/reasoning_engine.py`** — deterministic, rule-based risk scoring.
-   `RiskInput` (pydantic) holds detection stats (`detection_confidence`,
-   `detection_last_30_frames`, `detection_count`) plus `noaa_forecast` (a raw
-   forecast string) and optional `location`. `calculate_risk()` does additive
-   point-scoring across four rules (confidence tier, detection persistence
-   over the last 30 frames, detection count, and a substring keyword match
-   against the forecast text for "rip current"/"high surf"/"advisory") into a
-   0–1 score, bucketed into Low/Moderate/High risk. This is deliberately kept
-   rule-based rather than delegated to the LLM, so the risk classification
-   stays auditable — the LLM is only used downstream for message phrasing.
+```
+ripfinder-ai-agent/
+├── agent/
+│   ├── main.py                # demo entry point (sample JSON -> risk -> Claude message)
+│   ├── real_data_pipeline.py  # real entry point (WebCOOS + NOAA + ONNX -> risk -> Claude message)
+│   ├── reasoning_engine.py    # rule-based risk scoring (RiskInput -> RiskOutput)
+│   ├── llm_agent.py           # single-shot Claude call that phrases the safety message
+│   ├── rip_detector.py        # YOLOv8 ONNX inference over camera frames
+│   ├── webcoos_client.py      # WebCOOS camera API wrapper (discovery + download)
+│   ├── noaa_forecast.py       # NWS Surf Zone Forecast fetch + parse (+ cache)
+│   ├── station_config.py      # camera name -> (WFO site, zone) map
+│   └── forecast_parser.py     # empty, unreferenced stub
+├── prompts/
+│   ├── safety_prompt_v1.txt   # active system prompt (used by llm_agent.py)
+│   └── safety_prompt.txt      # empty, unused, dead file
+├── sample_inputs/
+│   └── sample_input.json      # hardcoded input for agent/main.py
+├── tests/
+│   └── test_cases.json        # empty, unused
+├── models/                    # gitignored — place .onnx model weights here
+├── data/webcoos_cache/        # gitignored — downloaded camera stills/video land here
+└── requirements.txt
+```
 
-2. **`agent/llm_agent.py`** — takes the `RiskInput`/`RiskOutput` pair, loads
-   the system prompt from `prompts/safety_prompt_v1.txt`, builds a single
-   f-string user message embedding all the structured data, and makes one
-   `client.messages.create()` call to Claude to turn it into a
-   natural-language AR safety message. Response is expected to be raw JSON
-   text, parsed via `parse_claude_json()`.
+Data flow for both entry points converges on the same two steps:
 
-3. **`agent/rip_detector.py`** — loads a YOLOv8 ONNX model (`onnxruntime`) and
-   runs inference over a list of frames (stills or sampled video frames),
-   producing per-class scores (`rip` weighted full, `sediment_rip` weighted
-   lower, `background` excluded) collapsed into the same detection stats
-   shape `reasoning_engine.py` expects.
+```
+detection stats + forecast text
+        │
+        ▼
+reasoning_engine.calculate_risk()   (deterministic, auditable)
+        │
+        ▼
+llm_agent.generate_safety_message()  (Claude call, phrasing only)
+        │
+        ▼
+   risk output + safety message (JSON)
+```
 
-4. **`agent/webcoos_client.py`** — thin wrapper around the WebCOOS camera API
-   (`pywebcoos`) for discovering cameras/products and downloading a recent
-   window of still images or video for a given camera.
-
-5. **`agent/noaa_forecast.py`** — fetches and parses the NWS Surf Zone
-   Forecast (SRF) product for a given Weather Forecast Office + zone,
-   extracting rip current risk / surf height / issue time, with a short-lived
-   in-memory cache. `agent/station_config.py` maps each supported WebCOOS
-   camera to its WFO site + zone code.
-
-6. **`prompts/safety_prompt_v1.txt`** — the active system prompt, with
-   explicit safety guardrails (do not claim certainty, do not say the beach
-   is safe, return only raw valid JSON). `prompts/safety_prompt.txt` is an
-   empty, unused, confusingly-named dead file — don't confuse the two.
-
-`agent/forecast_parser.py` is an empty, unreferenced stub.
+`agent/main.py` sources the top of that pipeline from
+`sample_inputs/sample_input.json`; `agent/real_data_pipeline.py` sources it
+from `webcoos_client.py` (camera stills) → `rip_detector.py` (ONNX detection
+stats) + `noaa_forecast.py`/`station_config.py` (live NOAA forecast).
 
 ## Setup
 
