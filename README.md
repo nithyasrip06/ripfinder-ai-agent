@@ -33,15 +33,11 @@ ripfinder-ai-agent/
 │   ├── rip_detector.py        # YOLOv8 ONNX inference over camera frames
 │   ├── webcoos_client.py      # WebCOOS camera API wrapper (discovery + download)
 │   ├── noaa_forecast.py       # NWS Surf Zone Forecast fetch + parse (+ cache)
-│   ├── station_config.py      # camera name -> (WFO site, zone) map
-│   └── forecast_parser.py     # empty, unreferenced stub
+│   └── station_config.py      # camera name -> (WFO site, zone) map
 ├── prompts/
-│   ├── safety_prompt_v1.txt   # active system prompt (used by llm_agent.py)
-│   └── safety_prompt.txt      # empty, unused, dead file
+│   └── safety_prompt_v1.txt   # active system prompt (used by llm_agent.py)
 ├── sample_inputs/
 │   └── sample_input.json      # hardcoded input for agent/main.py
-├── tests/
-│   └── test_cases.json        # empty, unused
 ├── models/                    # gitignored — place .onnx model weights here
 ├── data/webcoos_cache/        # gitignored — downloaded camera stills/video land here
 └── requirements.txt
@@ -105,8 +101,7 @@ there is no `agent/__init__.py`.
 
 ## Notes
 
-- There are no tests, no lint config, and no build step. `tests/test_cases.json`
-  exists but is empty.
+- There are no tests, no lint config, and no build step.
 - `data/webcoos_cache/` (downloaded camera stills/video) and `models/`
   (ONNX model weights) are gitignored — they're runtime artifacts, not source.
 - See `CLAUDE.md` for a more detailed breakdown of current vs. planned
