@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+data/webcoos_cache/
+models/
+.DS_Store
