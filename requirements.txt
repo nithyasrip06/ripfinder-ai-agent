@@ -2,7 +2,7 @@ anthropic
 python-dotenv
 pydantic
 fastapi
-uvicorn
+uvicorn[standard]
 requests
 git+https://github.com/WebCOOS/py-webcoos-client.git
 pandas
@@ -10,3 +10,4 @@ pytz
 onnxruntime
 onnx
 opencv-python-headless
+fastapi
