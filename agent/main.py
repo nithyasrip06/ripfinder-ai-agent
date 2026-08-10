@@ -24,10 +24,10 @@ def main():
     print(risk_output.model_dump_json(indent=2))
 
     # Step 2: Claude-generated AR safety message
-    safety_message = generate_safety_message(risk_input, risk_output)
+    #safety_message = generate_safety_message(risk_input, risk_output)
 
     print("\n--- CLAUDE SAFETY MESSAGE ---")
-    print(json.dumps(safety_message, indent=2))
+    #print(json.dumps(safety_message, indent=2))
 
 
 if __name__ == "__main__":
