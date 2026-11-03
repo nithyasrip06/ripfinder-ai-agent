@@ -1,3 +1,19 @@
+"""Standalone WebCOOS research pipeline (NOT the Unity /v1/assess path).
+
+This module is a self-contained, script-run research pipeline: it pulls real
+WebCOOS camera stills, runs the ONNX detector, fetches a NOAA forecast, scores
+it, and (optionally) phrases it with Claude. It is intentionally kept separate
+from the Unity-facing `/v1/assess` API (`agent/api.py`), which takes structured
+detection stats directly from the headset and does not import this module.
+
+Status: this pipeline pre-dates the current `RiskInput` schema and constructs
+`RiskInput(**stats, noaa_forecast=..., location=...)`, which no longer matches
+`reasoning_engine.RiskInput` -- so it is not currently runnable as-is and needs
+a schema update before use. It is retained (per project decision) as the
+research/data-collection workflow and is NOT coupled to the API path, so it does
+not affect `/v1/assess`. Do not delete it merely because Unity does not use it.
+"""
+
 import json
 from pathlib import Path
 

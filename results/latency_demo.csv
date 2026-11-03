@@ -1,0 +1,11 @@
+case,run_index,http_status,assessment_source,client_ms,risk_ms,claude_ms,backend_ms
+positive_detection,0,200,rule_engine_fallback,3.201,0.03,1.26,1.29
+positive_detection,1,200,rule_engine_fallback,3.075,0.04,1.18,1.22
+positive_detection,2,200,rule_engine_fallback,2.771,0.03,1.11,1.14
+positive_detection,3,200,rule_engine_fallback,2.476,0.02,0.98,1.0
+positive_detection,4,200,rule_engine_fallback,2.626,0.03,1.16,1.19
+no_rip,0,200,rule_engine_fallback,2.297,0.01,1.01,1.02
+no_rip,1,200,rule_engine_fallback,2.207,0.01,0.92,0.93
+no_rip,2,200,rule_engine_fallback,2.336,0.01,1.03,1.04
+no_rip,3,200,rule_engine_fallback,2.181,0.02,0.9,0.92
+no_rip,4,200,rule_engine_fallback,2.331,0.01,1.03,1.05

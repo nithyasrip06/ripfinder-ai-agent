@@ -1,0 +1,13 @@
+scope,metric,n,success_count,success_rate,median,p95,min,max
+positive_detection,risk_ms,30,30,1.0,0.03,0.055,0.01,0.07
+positive_detection,claude_ms,30,30,1.0,1.03,1.391,0.56,1.47
+positive_detection,backend_ms,30,30,1.0,1.06,1.425,0.58,1.5
+positive_detection,client_round_trip_ms,30,30,1.0,2.993,3.966,1.592,4.288
+no_rip,risk_ms,30,30,1.0,0.02,0.05,0.01,0.06
+no_rip,claude_ms,30,30,1.0,1.13,1.541,0.56,1.78
+no_rip,backend_ms,30,30,1.0,1.145,1.586,0.57,1.83
+no_rip,client_round_trip_ms,30,30,1.0,3.038,4.571,1.511,4.785
+combined,risk_ms,60,60,1.0,0.03,0.05,0.01,0.07
+combined,claude_ms,60,60,1.0,1.075,1.52,0.56,1.78
+combined,backend_ms,60,60,1.0,1.1,1.551,0.57,1.83
+combined,client_round_trip_ms,60,60,1.0,2.993,4.481,1.511,4.785
